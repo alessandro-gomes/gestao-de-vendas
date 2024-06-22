@@ -36,7 +36,7 @@
             background-color: #cb6a6a;
         }
 
-        h6 {
+        h4 {
             margin-top: 10px;
             margin-bottom: 30px;
         }
@@ -62,19 +62,19 @@
 
 
     <div class="container-fluid">
-        <h6>Cadastrar Cliente</h6>
+        <h4>Cadastrar Cliente</h4>
         <form class="needs-validation" novalidate>
             <div class="form-row">
                 <div class="form-group col">
                     <label for="nome">Nome do cliente:</label>
                     <input type="text" class="form-control" placeholder="Digite o nome" id="nome" required>
-                    <div class="invalid-feedback">Nome do cliente é obrigatório.</div>
+                    <div class="invalid-feedback">Por favor, insira o nome do cliente.</div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Enviar dados</button>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
     </div>
-    
+
     <div class="container-fluid ">
         <p>Continuar navegando...</p>
         <a href="vendas.html" class="btn btn-info">Vender</a>
@@ -110,14 +110,15 @@
                 return false;
             }
 
-            const n = $('#nome')[0].value;
+            const n = $('#nome').val();
 
             // $.post{
             $.ajax({
                 type: 'POST',
                 url: 'register',
                 data: {
-                    nome: n, id: Math.round((new Date().getTime()))
+                    nome: n,
+                    id: Math.round((new Date().getTime()))
                 },
                 dataType: 'json',
                 success: function (resp) {

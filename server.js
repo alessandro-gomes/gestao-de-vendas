@@ -14,7 +14,7 @@ const list = { "list": [
     { id: 1, nome: "Alessandro" }
 ]};
 
-app.get('/task', function (req, res) {
+app.get('/consulta', function (req, res) {
    res.writeHead(200, {'Content-Type': 'application/json'});
    const resp = JSON.stringify(list);
    res.end(resp);
