@@ -40,6 +40,16 @@
             margin-top: 10px;
             margin-bottom: 30px;
         }
+
+        a {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        p {
+            margin-top: 45px;
+            margin-bottom: 5px;
+        }
     </style>
 
 </head>
@@ -90,11 +100,17 @@
             </form>
         </div>
 
+        <div class="container-fluid ">
+            <p>Continuar navegando...</p>
+            <a href="cadastrar-cliente.html" class="btn btn-info">Cadastrar Cliente</a>
+            <a href="visualizar-vendas.html" class="btn btn-info">Visualizar Vendas</a>
+        </div>
+
         <script>
             function carregarClientes() {
                 $.ajax({
                     type: 'GET',
-                    url: '/consulta',
+                    url: '/search',
                     dataType: 'json',
                     success: function (data) {
                         const clienteSelect = $('#cliente');
@@ -119,16 +135,16 @@
                     return false;
                 }
 
-                const clienteId = $('#cliente').val();
+                const cliente = $('#cliente').val();
                 const produto = $('#produto').val();
                 const quantidade = $('#quantidade').val();
                 const preco = $('#preco').val();
 
-                const venda = { id: Date.now(), clienteId, produto, quantidade, preco };
+                const venda = { id: Date.now(), clienteId: cliente, produto: produto, quantidade: quantidade, preco: preco };
 
                 $.ajax({
                     type: 'POST',
-                    url: '/register',
+                    url: '/register-sale',
                     data: venda,
                     dataType: 'json',
                     success: function (resp) {

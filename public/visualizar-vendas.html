@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        * {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            padding: 0px 20px;
+            text-align: center;
+            background-color: #cb6a6a;
+        }
+
+        h4 {
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        a {
+            margin-right: 10px;
+        }
+
+        p {
+            margin-top: 90px;
+            margin-bottom: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header>
+            <h2>Gestão de Vendas</h2>
+        </header>
+    </div>
+
+    <div class="container-fluid">
+        <h4>Visualizar Vendas</h4>
+        <form class="needs-validation" novalidate id="formVisualizar">
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="cliente">Cliente</label>
+                    <select class="form-control" id="cliente">
+                        <option value="all" selected>Todos</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Visualizar</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="container-fluid table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                </tr>
+            </thead>
+            <tbody id="vendasBody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container-fluid ">
+        <p>Continuar navegando...</p>
+        <a href="cadastrar-cliente.html" class="btn btn-info">Cadastrar Cliente</a>
+        <a href="vendas.html" class="btn btn-info">Vender</a>
+    </div>
+
+    <script>
+        let clientes = [];
+
+        function loadClientes() {
+            $.ajax({
+                type: 'GET',
+                url: '/search',
+                dataType: 'json',
+                success: function (data) {
+                    const clienteSelect = $('#cliente');
+                    clientes = data.list;
+                    clientes.forEach(cliente => {
+                        clienteSelect.append(`<option value="${cliente.id}">${cliente.nome}</option>`);
+                    });
+                }
+            });
+        }
+
+        function getClienteNome(clienteId) {
+            const cliente = clientes.find(cliente => cliente.id == clienteId);
+            return cliente ? cliente.nome : 'Desconhecido';
+        }
+
+        function loadVendas(clienteId = 'all') {
+            $.ajax({
+                type: 'GET',
+                url: '/sales',
+                dataType: 'json',
+                success: function (data) {
+                    const vendasBody = $('#vendasBody');
+                    vendasBody.empty();
+
+                    data.list.forEach(venda => {
+
+                        if (clienteId === 'all' || venda.clienteId == clienteId) {
+                            vendasBody.append(`
+                                 <tr>
+                                     <td>${venda.id}</td>
+                                     <td>${getClienteNome(venda.clienteId)}</td>
+                                     <td>${venda.produto}</td>
+                                     <td>${venda.quantidade}</td>
+                                     <td>${venda.preco}</td>
+                                 </tr>
+                             `);
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            loadClientes();
+            loadVendas();
+
+            $('#formVisualizar').submit(function (event) {
+                event.preventDefault();
+                const clienteId = $('#cliente').val();
+                loadVendas(clienteId);
+            });
+        });
+    </script>
+</body>
+
+</html>

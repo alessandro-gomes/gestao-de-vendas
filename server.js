@@ -8,23 +8,39 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-const list = { "list": [ 
-    { id: 1, nome: "Alessandro" }
-]};
+const clients = {
+   "list": [
+      { id: 1, nome: "Alessandro" }]
+};
 
-app.get('/consulta', function (req, res) {
-   res.writeHead(200, {'Content-Type': 'application/json'});
-   const resp = JSON.stringify(list);
+const sales = { "list": [] };
+
+app.get('/search', function (req, res) {
+   res.writeHead(200, { 'Content-Type': 'application/json' });
+   const resp = JSON.stringify(clients);
    res.end(resp);
 });
 
 app.post('/register', function (req, res) {
    console.log(req.body);
-   list.list.push(req.body);
-   res.writeHead(200, {'Content-Type': 'application/json'});
+   clients.list.push(req.body);
+   res.writeHead(200, { 'Content-Type': 'application/json' });
    res.end('{ "msg": "Sucesso" }');
+});
+
+app.post('/register-sale', function (req, res) {
+   console.log(req.body);
+   sales.list.push(req.body);
+   res.writeHead(200, { 'Content-Type': 'application/json' });
+   res.end('{ "msg": "Venda registrada com sucesso!" }');
+});
+
+app.get('/sales', function (req, res) {
+   res.writeHead(200, { 'Content-Type': 'application/json' });
+   const resp = JSON.stringify(sales);
+   res.end(resp);
 });
 
 var server = app.listen(3000, function () {
