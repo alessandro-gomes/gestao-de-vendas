@@ -36,6 +36,12 @@
             background-color: #cb6a6a;
         }
 
+        h2 a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+        }
+
         h4 {
             margin-top: 10px;
             margin-bottom: 30px;
@@ -46,7 +52,7 @@
         }
 
         p {
-            margin-top: 90px;
+            margin-top: 60px;
             margin-bottom: 5px;
         }
     </style>
@@ -56,7 +62,7 @@
 <body>
     <div class="container-fluid">
         <header>
-            <h2>Gestão de Vendas</h2>
+            <h2><a href="index.html">Gestão de Vendas</a></h2>
         </header>
     </div>
 
@@ -81,7 +87,6 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Cliente</th>
                     <th>Produto</th>
                     <th>Quantidade</th>
@@ -91,6 +96,8 @@
             <tbody id="vendasBody">
             </tbody>
         </table>
+        <br>
+        <h5>Valor Total: R$ <span id="totalVendas">0.00</span></h5>
     </div>
 
     <div class="container-fluid ">
@@ -102,7 +109,7 @@
     <script>
         let clientes = [];
 
-        function loadClientes() {
+        function carregarClientes() {
             $.ajax({
                 type: 'GET',
                 url: '/search',
@@ -122,41 +129,46 @@
             return cliente ? cliente.nome : 'Desconhecido';
         }
 
-        function loadVendas(clienteId = 'all') {
+        function carregarVendas(clienteId = 'all') {
             $.ajax({
                 type: 'GET',
                 url: '/sales',
                 dataType: 'json',
                 success: function (data) {
                     const vendasBody = $('#vendasBody');
+                    const totalVendasElem = $('#totalVendas');
                     vendasBody.empty();
+
+                    let totalVendas = 0;
 
                     data.list.forEach(venda => {
 
                         if (clienteId === 'all' || venda.clienteId == clienteId) {
                             vendasBody.append(`
                                  <tr>
-                                     <td>${venda.id}</td>
+                                     
                                      <td>${getClienteNome(venda.clienteId)}</td>
                                      <td>${venda.produto}</td>
                                      <td>${venda.quantidade}</td>
                                      <td>${venda.preco}</td>
                                  </tr>
                              `);
+                            totalVendas += venda.preco * venda.quantidade;
                         }
                     });
+                    totalVendasElem.text(totalVendas.toFixed(2));
                 }
             });
         }
 
         $(document).ready(function () {
-            loadClientes();
-            loadVendas();
+            carregarClientes();
+            carregarVendas();
 
             $('#formVisualizar').submit(function (event) {
                 event.preventDefault();
                 const clienteId = $('#cliente').val();
-                loadVendas(clienteId);
+                carregarVendas(clienteId);
             });
         });
     </script>

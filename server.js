@@ -10,10 +10,7 @@ app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const clients = {
-   "list": [
-      { id: 1, nome: "Alessandro" }]
-};
+const clients = { "list": [] };
 
 const sales = { "list": [] };
 
@@ -27,7 +24,7 @@ app.post('/register', function (req, res) {
    console.log(req.body);
    clients.list.push(req.body);
    res.writeHead(200, { 'Content-Type': 'application/json' });
-   res.end('{ "msg": "Sucesso" }');
+   res.end('{ "msg": "Cliente cadastrado com sucesso!" }');
 });
 
 app.post('/register-sale', function (req, res) {
