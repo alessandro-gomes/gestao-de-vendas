@@ -146,7 +146,6 @@
                         if (clienteId === 'all' || venda.clienteId == clienteId) {
                             vendasBody.append(`
                                  <tr>
-                                     
                                      <td>${getClienteNome(venda.clienteId)}</td>
                                      <td>${venda.produto}</td>
                                      <td>${venda.quantidade}</td>
@@ -161,15 +160,15 @@
             });
         }
 
+        $('#formVisualizar').submit(function (event) {
+            event.preventDefault();
+            const clienteId = $('#cliente').val();
+            carregarVendas(clienteId);
+        });
+
         $(document).ready(function () {
             carregarClientes();
             carregarVendas();
-
-            $('#formVisualizar').submit(function (event) {
-                event.preventDefault();
-                const clienteId = $('#cliente').val();
-                carregarVendas(clienteId);
-            });
         });
     </script>
 </body>
